@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+</head>
+<body>
+
+
+  <script>
+    var elementsToObserve = [], observer;
+
+    fetch('http://jsonplaceholder.typicode.com/posts').then(res => res.json()).then(posts => render(posts)).then(() => {
+      observer = new IntersectionObserver(onChange, {
+        threshold: [0.5]
+      });
+
+      elementsToObserve.forEach(el => observer.observe(el));
+    });
+
+    function onChange(changes) {
+      changes.map(change => {
+        /*
+        you can send a XHR that increases the view count of this particular post for now i'm
+        just logging the data-id attribute that i send while creating the div of each post
+        */
+        console.log(change.target.getAttribute('data-id'));
+        observer.unobserve(change.target);
+      });
+    }
+
+    function render(posts) {
+
+      posts.forEach(post => {
+        var el = document.createElement('div');
+        el.setAttribute("data-id", post.id);
+        var titleP = document.createElement('p');
+        titleP.textContent = "Title: " + post.title.repeat(15);
+        var bodyP = document.createElement('p');
+        bodyP.textContent = "Body: " + post.body.repeat(25);
+        el.appendChild(titleP);
+        el.appendChild(bodyP);
+
+        document.body.appendChild(el);
+        elementsToObserve.push(el);
+      });
+
+    }
+
+  </script>
+</body>
+</html>
