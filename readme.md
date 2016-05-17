@@ -1,6 +1,3 @@
-# intersectionObserverAPI
-IntersectionObserver API demo
-
 # Intersection Observer API
 
 
